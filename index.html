@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, minimal-ui">
+
+        <title>QR Code Reader</title>
+
+    </head>
+
+    <body>
+        <div>
+            <div class="page_single layout_fullwidth_padding">
+                <div class="selector_overlay">
+                    <select id="webcameraChanger" class="required" onchange="cameraChange($(this).val());">
+
+                    </select>     
+                </div>
+                <video id="preview" style="width: 100%;"></video>
+                <center>
+                    <span style="font-size: 11px; color: red;">*Please make sure camera permission for your browser is enabled</span>
+                    <br/><br/>
+                    <span>QR String</span><br/>
+                    <span style="font-size: 14px; color: blue;" id="qr_string"> Please scan your QR Code </span>
+                </center>
+            </div>
+        </div>
+
+        <script src="js/jquery.min.js"></script>
+
+        <!-- QR Scanner -->
+        <script src="js/adapter.min.js"></script>
+        <script src="js/instascan.js"></script>
+        <script src="js/QrCodeScanner.js"></script>
+
+        <script type="text/javascript">
+            //HTML video component for web camera
+            var videoComponent = $("#preview");
+            //HTML select component for cameras change
+            var webcameraChanger = $("#webcameraChanger");
+            var options = {};
+            //init options for scanner
+            options = initVideoObjectOptions("preview");
+            var cameraId = 0;
+            initScanner(options);
+            initAvaliableCameras(
+                    webcameraChanger,
+                    function () {
+                        cameraId = parseInt(getSelectedCamera(webcameraChanger));
+                        initCamera(cameraId);
+                    }
+            );
+            scanStart(function (content) {
+                if (content !== null) {
+                    $("#qr_string").html(content);
+                    alert(content);
+                }
+            });
+        </script>
+    </body>
+</html>
